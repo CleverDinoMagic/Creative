@@ -378,7 +378,7 @@ public class MenuUtil implements Listener {
         })));
 
         if (player.getRank() != Rank.GUEST) {
-            buttons.add(new MenuButton(13, ItemUtil.create(Material.MUSIC_DISC_CAT, ChatColor.GREEN + "Set park loop music."), ImmutableMap.of(ClickType.LEFT, p -> Creative.getInstance().getParkLoopUtil().open(p, 1))));
+            buttons.add(new MenuButton(13, ItemUtil.create(Material.MUSIC_DISC_CAT, ChatColor.YELLOW + "Park loop music unavailable"), ImmutableMap.of(ClickType.LEFT, p -> p.sendMessage(ChatColor.YELLOW + "Park loop music is unavailable on this server."))));
         }
 
         buttons.add(new MenuButton(9, ItemUtil.create(Material.CLOCK, ChatColor.GREEN + "6AM", time == 0 ? current : not), getTimeAction(plot, 0)));

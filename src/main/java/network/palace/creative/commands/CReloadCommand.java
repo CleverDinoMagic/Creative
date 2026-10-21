@@ -26,7 +26,6 @@ public class CReloadCommand extends CoreCommand {
         if (args.length == 0) {
             plugin.loadConfig();
             plugin.loadWarps();
-            plugin.getParkLoopUtil().reloadLoops();
             sender.sendMessage(ChatColor.GREEN + "Configs reloaded successfully.");
             return;
         }
@@ -47,8 +46,7 @@ public class CReloadCommand extends CoreCommand {
                 sender.sendMessage(ChatColor.GREEN + "Config reloaded successfully.");
                 break;
             case "loops":
-                plugin.getParkLoopUtil().reloadLoops();
-                sender.sendMessage(ChatColor.GREEN + "Loops reloaded successfully.");
+                sender.sendMessage(ChatColor.YELLOW + "Park loop music is unavailable on this server.");
                 break;
             case "plotwarps":
                 plugin.getPlotWarpUtil().load();

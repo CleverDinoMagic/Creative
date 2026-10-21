@@ -57,11 +57,6 @@
             <version>4.6.0</version>
         </dependency>
         <dependency>
-            <groupId>network.palace</groupId>
-            <artifactId>Audio</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.plotsquared</groupId>
             <artifactId>PlotSquared-Core</artifactId>
             <version>5.13.3</version>
