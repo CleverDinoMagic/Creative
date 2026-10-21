@@ -5,8 +5,6 @@ import com.plotsquared.core.plot.Plot;
 import com.plotsquared.core.plot.PlotId;
 import lombok.Getter;
 import lombok.Setter;
-import network.palace.audio.Audio;
-import network.palace.audio.handlers.AudioArea;
 import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.core.player.Rank;
@@ -478,11 +476,7 @@ public class Show {
     }
 
     public void syncAudioForPlayer(final CPlayer tp) {
-        final AudioArea area = Audio.getInstance().getByName(Core.getPlayerManager().getPlayer(owner).getUniqueId().toString());
-        if (area == null) return;
-        area.triggerPlayer(tp);
-        tp.sendMessage(ChatColor.GREEN + "Syncing your audio!");
-        Bukkit.getScheduler().runTaskLater(Creative.getInstance(), () -> area.sync(((System.currentTimeMillis() - musicTime + 300) / 1000D), tp), 20L);
+        tp.sendMessage(ChatColor.YELLOW + "Show audio is unavailable on this server.");
     }
 
     public void setName(String name) {

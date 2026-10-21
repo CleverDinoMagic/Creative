@@ -1,8 +1,6 @@
 package network.palace.creative;
 
 import lombok.Getter;
-import network.palace.audio.Audio;
-import network.palace.audio.handlers.AudioArea;
 import network.palace.core.Core;
 import network.palace.core.player.Rank;
 import network.palace.core.plugin.Plugin;
@@ -39,7 +37,6 @@ public class Creative extends Plugin {
     @Getter private RedstoneListener redstoneListener;
     @Getter private BannerUtil bannerUtil;
     @Getter private MenuUtil menuUtil;
-    @Getter private ParkLoopUtil parkLoopUtil;
     @Getter private ParticleManager particleManager;
     @Getter private RolePlayUtil rolePlayUtil;
     @Getter private ShowManager showManager;
@@ -62,7 +59,6 @@ public class Creative extends Plugin {
 
         redstoneListener = new RedstoneListener();
         menuUtil = new MenuUtil();
-        parkLoopUtil = new ParkLoopUtil();
         bannerUtil = new BannerUtil();
         particleManager = new ParticleManager();
         rolePlayUtil = new RolePlayUtil();
@@ -81,19 +77,13 @@ public class Creative extends Plugin {
         registerListeners();
         registerCommands();
 
-        for (AudioArea area : Audio.getInstance().getAudioAreas()) {
-            try {
-                UUID.fromString(area.getAreaName());
-                Audio.getInstance().removeArea(area);
-            } catch (Exception ignored) {
-            }
-        }
+        getLogger().warning("Private Audio integration is unavailable; shows run without music and park loops are disabled.");
+
     }
 
     @Override
     public void onPluginDisable() {
         itemExploitHandler.saveCaughtItems();
-        parkLoopUtil.serverShutdown();
         showManager.stopAllShows();
     }
 

@@ -3,8 +3,6 @@ package network.palace.creative.show;
 import com.google.common.collect.ImmutableMap;
 import com.plotsquared.core.player.PlotPlayer;
 import com.plotsquared.core.plot.Plot;
-import network.palace.audio.Audio;
-import network.palace.audio.handlers.AudioArea;
 import network.palace.core.Core;
 import network.palace.core.menu.Menu;
 import network.palace.core.menu.MenuButton;
@@ -18,7 +16,6 @@ import network.palace.creative.show.actions.ParticleAction;
 import network.palace.creative.show.actions.ShowAction;
 import network.palace.creative.show.actions.TextAction;
 import network.palace.creative.show.handlers.AudioTrack;
-import network.palace.creative.show.handlers.PlotArea;
 import network.palace.creative.show.ticker.TickEvent;
 import network.palace.creative.show.ticker.Ticker;
 import network.palace.creative.utils.TextInput;
@@ -96,9 +93,7 @@ public class ShowManager implements Listener {
                                     " has ended!");
                         }
 
-                        stopAudio(show);
                         shows.remove(entry.getKey());
-                        Creative.getInstance().getParkLoopUtil().enableRegion(show.getOwner());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -156,52 +151,23 @@ public class ShowManager implements Listener {
             return null;
         }
 
-        if (!show.getAudioTrack().equals("none")) {
-            PlotArea area;
-            AudioArea temp = Audio.getInstance().getByName(player.getUniqueId().toString());
-            if (temp != null) {
-                area = (PlotArea) temp;
-            } else {
-                Audio.getInstance().removeArea(null);
-                area = new PlotArea(plot.getId(), player, show.getAudioTrack(), player.getWorld());
-            }
-            if (Audio.getInstance().getByName(area.getAreaName()) == null) Audio.getInstance().addArea(area);
-            for (CPlayer p : Core.getPlayerManager().getOnlinePlayers()) {
-                if (p == null || p.getBukkitPlayer() == null)
-                    continue;
-                Plot pl = PlotPlayer.wrap(p.getBukkitPlayer()).getCurrentPlot();
-                if (pl == null)
-                    continue;
-                if (pl.getId().equals(plot.getId())) {
-                    area.triggerPlayer(p);
-                }
-            }
+        if (!"none".equals(show.getAudioTrack())) {
+            messagePlayer(player, ChatColor.YELLOW + "Show music is unavailable; starting visual effects only.");
         }
 
         shows.put(player.getUniqueId(), show);
         player.removeMetadata("showname", Creative.getInstance());
-        Creative.getInstance().getParkLoopUtil().disableRegion(plot);
         return show;
     }
 
     public boolean stopShow(UUID uuid) {
         Show show = shows.remove(uuid);
         if (show == null) return false;
-        stopAudio(show);
-        Creative.getInstance().getParkLoopUtil().enableRegion(show.getOwner());
         return true;
     }
 
     public void stopAllShows() {
-        shows.values().forEach(this::stopAudio);
         shows.clear();
-    }
-
-    private void stopAudio(Show show) {
-        Audio.getInstance().getAudioAreas().stream().filter(Objects::nonNull).filter(area -> area.getAreaName().equals(show.getOwner().toString())).forEach(area -> {
-            area.removeAllPlayers(true);
-            Audio.getInstance().removeArea(area);
-        });
     }
 
     public void selectShow(CPlayer player) {
@@ -370,30 +336,7 @@ public class ShowManager implements Listener {
     }
 
     private void selectTrack(CPlayer player, int page, Show show) {
-        List<MenuButton> buttons = new ArrayList<>();
-        List<AudioTrack> audioTracks = new ArrayList<>(this.audioTracks.values());
-        audioTracks.sort(Comparator.comparing(AudioTrack::getName));
-        for (int x = 0; x < 27; x++) {
-            try {
-                AudioTrack track = audioTracks.get(x + (page - 1) * 27);
-                buttons.add(new MenuButton(x, ItemUtil.create(track.getItem(), ChatColor.GREEN + track.getName()), ImmutableMap.of(ClickType.LEFT, p -> {
-                    show.setAudioTrack(track.getAudioPath());
-                    show.saveFile();
-                    editShow(p, 1, show);
-                })));
-            } catch (IndexOutOfBoundsException ignored) {
-
-            }
-        }
-
-        if (page - 1 > 0) {
-            buttons.add(new MenuButton(27, Creative.getInstance().getMenuUtil().last, ImmutableMap.of(ClickType.LEFT, p -> selectTrack(p, page - 1, show))));
-        }
-        buttons.add(new MenuButton(31, Creative.getInstance().getMenuUtil().back, ImmutableMap.of(ClickType.LEFT, p -> editShow(p, 1, show))));
-        if (page + 1 <= (int) Math.ceil(audioTracks.size() / 27D)) {
-            buttons.add(new MenuButton(35, Creative.getInstance().getMenuUtil().next, ImmutableMap.of(ClickType.LEFT, p -> selectTrack(p, page + 1, show))));
-        }
-        new Menu(36, ChatColor.BLUE + "Select Track", player, buttons).open();
+        player.sendMessage(ChatColor.YELLOW + "Show music is unavailable on this server.");
     }
 
     private void removeTrack(CPlayer player, Show show) {
@@ -636,7 +579,7 @@ public class ShowManager implements Listener {
         List<MenuButton> buttons = new ArrayList<>();
         ItemStack text = ItemUtil.create(Material.OAK_SIGN, ChatColor.GREEN + "Text Action");
         ItemStack removeMusic = ItemUtil.create(Material.BARRIER, ChatColor.RED + "Remove Music Track");
-        ItemStack music = ItemUtil.create(Material.MUSIC_DISC_CHIRP, ChatColor.GREEN + "Set Music");
+        ItemStack music = ItemUtil.create(Material.MUSIC_DISC_CHIRP, ChatColor.YELLOW + "Music unavailable");
         ItemStack particle = ItemUtil.create(Material.NETHER_STAR, ChatColor.GREEN + "Particle Action");
         ItemStack fw = ItemUtil.create(Material.FIREWORK_ROCKET, ChatColor.GREEN + "Firework Action");
         buttons.add(new MenuButton(10, text, ImmutableMap.of(ClickType.LEFT, p -> {
