@@ -1,6 +1,5 @@
 package network.palace.creative.commands;
 
-import com.plotsquared.bukkit.player.BukkitPlayer;
 import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.api.PlotAPI;
 import com.plotsquared.core.player.PlotPlayer;
@@ -134,7 +133,7 @@ public class CreatorCommand extends CoreCommand {
         player.closeInventory();
         final long time = System.currentTimeMillis();
         player.sendMessage(ChatColor.GREEN + "Finding you a plot right now...");
-        BukkitPlayer plr = (BukkitPlayer) PlotPlayer.wrap(player);
+        PlotPlayer<?> plr = PlotPlayer.wrap(player);
         final String worldname = "creator";
         PlotArea plotarea = PlotSquared.get().getPlotArea(worldname, worldname);
         plotarea.setMeta("lastPlot", new PlotId(0, 0));
