@@ -1,7 +1,6 @@
 package network.palace.creative.show;
 
 import com.google.common.collect.ImmutableMap;
-import com.plotsquared.bukkit.player.BukkitPlayer;
 import com.plotsquared.core.player.PlotPlayer;
 import com.plotsquared.core.plot.Plot;
 import network.palace.audio.Audio;
@@ -119,7 +118,7 @@ public class ShowManager implements Listener {
             return null;
         }
 
-        BukkitPlayer plotPlayer = (BukkitPlayer) PlotPlayer.wrap(player.getBukkitPlayer());
+        PlotPlayer<?> plotPlayer = PlotPlayer.wrap(player.getBukkitPlayer());
         Plot plot = plotPlayer.getCurrentPlot();
         boolean owns = false;
         if (plot == null) {

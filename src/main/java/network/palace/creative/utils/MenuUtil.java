@@ -1,7 +1,6 @@
 package network.palace.creative.utils;
 
 import com.google.common.collect.ImmutableMap;
-import com.plotsquared.bukkit.player.BukkitPlayer;
 import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.player.PlotPlayer;
 import com.plotsquared.core.plot.Plot;
@@ -762,7 +761,7 @@ public class MenuUtil implements Listener {
             return;
         }
 
-        BukkitPlayer plotPlayer = (BukkitPlayer) PlotPlayer.wrap(player.getBukkitPlayer());
+        PlotPlayer<?> plotPlayer = PlotPlayer.wrap(player.getBukkitPlayer());
         if (plotPlayer == null) return;
 
         List<MenuButton> buttons = new ArrayList<>();
@@ -839,7 +838,7 @@ public class MenuUtil implements Listener {
         player.closeInventory();
         final long time = System.currentTimeMillis();
         player.sendMessage(ChatColor.GREEN + "Finding you a plot right now...");
-        BukkitPlayer plr = (BukkitPlayer) PlotPlayer.wrap(player.getBukkitPlayer());
+        PlotPlayer<?> plr = PlotPlayer.wrap(player.getBukkitPlayer());
         String world;
         Set<String> worlds = plotSquared.worlds.getConfigurationSection("worlds").getKeys(false);
         if (worlds.size() == 1) {
